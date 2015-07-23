@@ -1,0 +1,3 @@
+interface Animated {
+	void animate();
+}
