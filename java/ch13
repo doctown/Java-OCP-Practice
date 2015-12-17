@@ -1,0 +1,55 @@
+public class MyThreadPractice extends Thread {
+	private static StringBuilder sb;
+	public static void main(String[] args) {
+		StringBuilder s = new StringBuilder();
+		s.append("A");
+		Thread thd1 = new MyThreadPractice(s);
+		Thread thd2 = new MyThreadPractice(s);
+		Thread thd3 = new MyThreadPractice(s);
+		thd1.run();
+		thd2.run();
+		thd3.run();
+		
+		ThreadB b = new ThreadB();
+		b.start();
+		synchronized(b) {
+			try {
+				System.out.println("Waiting for b to complete...");
+				b.wait();
+				System.out.println("Notified by b with a total of " + b.total);
+			} catch (InterruptedException e) {
+				System.out.println("Total is " + b.total);
+			}
+		}
+	}
+	
+	public MyThreadPractice(StringBuilder sb) {
+		this.sb = sb;
+	}
+	public void run() {
+		//synchronized (this) {
+		for (int i = 0; i < 10; i++) {
+			System.out.print(i);
+			System.out.print(sb);
+		}
+		System.out.println();
+		if (sb.length() == 1) {
+			sb.setCharAt(0, (char) (sb.charAt(0) + 1));
+		}
+		//}
+	}
+}
+
+class ThreadB extends Thread {
+	int total;
+	
+	public void run() {
+		synchronized(this) {
+			for(int i = 0; i < 100; i++) {
+				total += i;
+			}
+			notify();
+		}
+	}
+	
+}

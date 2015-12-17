@@ -1,12 +1,18 @@
-import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
+/*
+ * Book: OCA/OCP Java® SE 7 Programmer I & II Study Guide
+ * Chapter 14
+ * Author: David O.
+ * Date: 12-17-2015
+ */
 public class Ch14Practice {
 	public static void main(String[] args) {
 		sharingVariable();
 	}
 	
 	/**
-	 * Demonstrates problem with incrementing a variable
+	 * Demonstrates problem with incrementing a variable without synchronization.
 	 */
 	public static void sharingVariable() {
 		Game g = new Game();
@@ -24,15 +30,18 @@ public class Ch14Practice {
 		
 		System.out.println("Final count is " + g.getCount());
 		System.out.println("Final synchronized count is " + g.getSynchCount());
-		System.out.println("Final atomic count is " + g.getAtmCount());
+		System.out.println("Final atomic count is " + g.getAtomicCount());
 	}
 	
 }
 
+/**
+ * Allows a shared count to be incremented by participants.
+ */
 class Game implements Runnable {
 	private static int count;
 	private static int synchCount;
-	private static AtomicInteger atmCount;
+	private static AtomicInteger atmCount = new AtomicInteger();
 	
 	public static final int LIMIT = 10000;
 	
@@ -45,7 +54,7 @@ class Game implements Runnable {
 	}
 	
 	public synchronized void synchIncrement() {
-		count++;
+		synchCount++;
 	}
 	
 	public int getCount() {
@@ -57,7 +66,7 @@ class Game implements Runnable {
 	}
 	
 	public int getAtomicCount() {
-		return atmCount;
+		return atmCount.intValue();
 	}
 	
 	public void run() {
