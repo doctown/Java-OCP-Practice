@@ -1,4 +1,5 @@
 import java.util.concurrent.atomic.*;
+import java.util.*;
 
 /*
  * Book: OCA/OCP Java® SE 7 Programmer I & II Study Guide
@@ -9,6 +10,7 @@ import java.util.concurrent.atomic.*;
 public class Ch14Practice {
 	public static void main(String[] args) {
 		sharingVariable();
+		sharingList();
 	}
 	
 	/**
@@ -33,8 +35,41 @@ public class Ch14Practice {
 		System.out.println("Final atomic count is " + g.getAtomicCount());
 	}
 	
+	/**
+	 * Demonstrate the problem when an Collection like an arraylist is not thread safe. 
+	 */
+	public static void sharingList() {
+		FavoriteBooks fb = new FavoriteBooks();
+		Thread thd1 = new Thread(fb);
+		Thread thd2 = new Thread(fb);
+		
+		thd1.start();
+		thd2.start();
+	}
 }
 
+/**
+ * A class of favorite books to work with a collection.
+ */
+class FavoriteBooks implements Runnable {
+	private List<String> books = new ArrayList<String>();
+	
+	FavoriteBooks() {
+		for (int i = 0; i < Game.LIMIT; i++) {
+			books.add("book #" + i);
+		}
+	}
+	
+	/**
+	 * Remove the elements from a list.
+	 */
+	public void run() {
+		String name = Thread.currentThread().getName();
+		while (!books.isEmpty()) {
+			System.out.printf("Thread %s removing %s\n", name, books.remove(0));
+		}
+	}
+}
 /**
  * Allows a shared count to be incremented by participants.
  */
