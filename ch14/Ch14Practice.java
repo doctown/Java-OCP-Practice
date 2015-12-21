@@ -1,3 +1,6 @@
+package ch14;
+
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.*;
 
@@ -53,10 +56,16 @@ public class Ch14Practice {
  */
 class FavoriteBooks implements Runnable {
 	private List<String> books = new ArrayList<String>();
+	private CopyOnWriteArrayList<String> booksCopyList = new CopyOnWriteArrayList<>();
+	private Game counter = new Game();
 	
 	FavoriteBooks() {
 		for (int i = 0; i < Game.LIMIT; i++) {
 			books.add("book #" + i);
+		}
+		
+		for (int i = 0; i < Game.LIMIT; i++) {
+			booksCopyList.add("book #" + i);
 		}
 	}
 	
@@ -66,8 +75,18 @@ class FavoriteBooks implements Runnable {
 	public void run() {
 		String name = Thread.currentThread().getName();
 		while (!books.isEmpty()) {
-			System.out.printf("Thread %s removing %s\n", name, books.remove(0));
+			books.remove(0);
+			counter.atmIncrement();
+			
 		}
+		System.out.printf("%d items were removed\n", counter.getAtomicCount());
+		
+		while (!booksCopyList.isEmpty()) {
+			booksCopyList.remove(0);	
+			counter.synchIncrement();
+		}
+		
+		System.out.printf("%d items were removed\n", counter.getAtomicCount());
 	}
 }
 /**
