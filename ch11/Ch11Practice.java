@@ -1,11 +1,23 @@
 /**
  * Practice concepts in chapter 11.
+ *
+ * Book: OCA/OCP Java® SE 7 Programmer I & II Study Guide
+ * Chapter 11: Generics and Collections
+ * Author: David O.
+ * Date: 11-8-2015
  */
 package ch11;
 
 import java.util.*;
 
 public class Ch11Practice {
+	public static void main(String[] args) {
+		// Ch11Practice ch = new Ch11Practice();
+		// ch.arrayListTest();
+		// ch.setTest();
+		priorityQueueTest();
+	}
+	
 	private class Movie implements Comparable<Movie> {
 		private String title;
 		private String genre;
@@ -55,12 +67,6 @@ public class Ch11Practice {
 		}
 	}
 	
-	public static void main(String[] args) {
-		Ch11Practice ch = new Ch11Practice();
-		ch.arrayListTest();
-		ch.setTest();
-	}
-	
 	public void setTest() {
 		Scanner input = new Scanner(System.in);
 		String line = "";
@@ -94,4 +100,23 @@ public class Ch11Practice {
 		}
 	}
 	
+	/**
+	 * Practice using a priority queue by allowing the user to enter letters to be
+	 * entered in the priority queue.
+	 */
+	 public static void priorityQueueTest() {
+		 Scanner input = new Scanner(System.in);
+		 PriorityQueue<String> pq = new PriorityQueue<>();
+		 String text = "";
+		 
+		 System.out.println("Please enter a series of characters.");
+		 while (!(text = input.next()).equals("0")) {
+			 System.out.println(text);
+			 pq.offer(text);
+		 }
+		 
+		 for (int i = 0; i < pq.size(); i++) {
+			 System.out.print(pq.poll() + "\t");
+		 }
+	 }
 }
