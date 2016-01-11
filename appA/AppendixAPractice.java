@@ -1,6 +1,7 @@
 package appA;
 
 import java.io.*;
+import java.util.*;
 
 /** 
  * Practice using serialization with Java classes.
@@ -63,5 +64,70 @@ class Tool  implements Serializable {
 	
 	public String toString() {
 		return "I am a " + name;
+	}
+}
+
+class ID {
+	private String name;
+	private int myID;
+	private String company;
+	
+	ID(String name, String company, int id) {
+		super();
+		this.name = name;
+		this.company = company;
+		this.myID = id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getCompany() {
+		return company;
+	}
+	
+	public int getID() {
+		return myID;
+	}
+}
+
+class ToolBox implements Serializable {
+	private transient ID owner;
+	private ArrayList<Tool> tools;
+	private static int idCounter;
+	
+	public ToolBox(String name, String company) {
+		owner = new ID(name, company, ++idCounter);
+		tools = new ArrayList<>();
+	}
+	
+	public void writeObject(ObjectOutputStream os) {
+		try {
+			os.defaultWriteObject();
+			os.writeUTF(owner.getName());
+			os.writeUTF(owner.getCompany());
+			os.writeInt(owner.getID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void readObject(ObjectInputStream ois) {
+		try {
+			ois.defaultReadObject();
+			ID id = new ID(ois.readUTF(), ois.readUTF(), ois.readInt());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String toString() {
+		String str = owner.getName() + "(#" + owner.getID() + ") works for " + owner.getCompany() + ".\n";
+		str += "He has the following tools in his toolbox: \n";
+		for (Tool tool : tools) {
+			str += tool + "\n";
+		}
+		return str;
 	}
 }
