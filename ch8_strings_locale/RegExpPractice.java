@@ -6,7 +6,7 @@
  * Author: David Ogor
  * Date: 08-15-2015
  */
- package ch8;
+package ch8_strings_locale;
  
 import java.util.regex.*;
 

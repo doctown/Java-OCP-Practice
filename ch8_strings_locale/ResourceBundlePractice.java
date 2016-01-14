@@ -16,6 +16,8 @@ import java.util.*;
  
 class AvailableLocales {
 	public void showLocales() {
+		ArrayList<Locale> specificList = new ArrayList<>(); // store a group of a specific language
+		
 		System.out.println("The default locale is: " + Locale.getDefault());
 		Locale[] locales = Locale.getAvailableLocales();
 		System.out.printf("There are %d locales\n", locales.length);
@@ -26,8 +28,12 @@ class AvailableLocales {
 		});
 		
 		for (Locale loc : locales) {
+			if (loc.getLanguage().equals("en")) {
+				specificList.add(loc);
+			}
 			System.out.printf("%15s%s which stands for %s %n","Locale code: ", loc, loc.getDisplayName());
 		}
+		System.out.println("List of english locales: " + specificList);
 	}
 }
  
